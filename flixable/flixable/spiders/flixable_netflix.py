@@ -1,4 +1,5 @@
 import scrapy
+from ..items import FlixableItem
 
 
 class NetflixList(scrapy.Spider):
@@ -8,15 +9,12 @@ class NetflixList(scrapy.Spider):
 
     def parse(self, response):
         titles = response.css("div.item")
+        item = FlixableItem()
         for title in titles:
-            title_url = title.css(
+            item['title_url'] = title.css(
                 "div.card-body a::attr(href)").extract_first()
-            title_name = title.css("h5.card-title::text").extract_first()
-            title_id = title.css(
+            item['title_name'] = title.css(
+                "h5.card-title::text").extract_first()
+            item['title_id'] = title.css(
                 "span.imdbRatingPlugin::attr(data-title)").extract_first()
-
-            yield {
-                'url': title_url,
-                'name': title_name,
-                'id': title_id
-            }
+            yield item
