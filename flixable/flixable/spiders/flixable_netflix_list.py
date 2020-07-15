@@ -8,7 +8,6 @@ class NetflixList(scrapy.Spider):
     start_urls = [
         "https://flixable.com/?min-rating=0&min-year=1920&max-year=2020&order=title#filterForm"]
     page_num = 1
-    base_url = "https://flixable.com"
 
     def parse(self, response):
         if response.status == 200:
@@ -25,7 +24,6 @@ class NetflixList(scrapy.Spider):
                 item.update(details) """
                 yield item
             self.page_num = self.page_num + 1
-            # yield scrapy.Request(url=self.api_url.format(next_page), callback=self.parse)
             yield response.follow(url=self.api_url.format(self.page_num), callback=self.parse)
 
 
