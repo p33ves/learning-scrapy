@@ -6,7 +6,7 @@ from ..items import FlixableNetflixItem
 class NetflixItem(scrapy.Spider):
     name = "netflix_item"
     base_url = "https://flixable.com"
-    list_file = open("netflix_list.json")
+    list_file = open("data/netflix_list.json")
     list_data = json.load(list_file)
     start_urls = list()
     for row in list_data:
