@@ -8,6 +8,7 @@ class NetflixItem(scrapy.Spider):
     base_url = "https://flixable.com"
     list_file = open("data/netflix_list.json")
     list_data = json.load(list_file)
+    # [self.base_url+row['title_url'] for row in list_data] -----> why doesn't this work?
     start_urls = list()
     for row in list_data:
         start_urls.append(base_url+row['title_url'])

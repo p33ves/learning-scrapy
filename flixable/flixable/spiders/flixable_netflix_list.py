@@ -10,16 +10,19 @@ class NetflixList(scrapy.Spider):
     page_num = 1
 
     def parse(self, response):
-        if response.status == 200:
-            titles = response.css("div.item")
-            item = FlixableListItem()
-            for title in titles:
-                item['title_url'] = title.css(
-                    "div.card-body a::attr(href)").extract_first()
-                item['title_name'] = title.css(
-                    "h5.card-title::text").extract_first()
-                item['title_id'] = title.css(
-                    "span.imdbRatingPlugin::attr(data-title)").extract_first()
-                yield item
-            self.page_num = self.page_num + 1
+        titles = response.css("div.item")
+        item = FlixableListItem()
+        scrapped = False
+        for title in titles:
+            item['title_url'] = title.css(
+                "div.card-body a::attr(href)").extract_first()
+            item['title_name'] = title.css(
+                "h5.card-title::text").extract_first()
+            item['title_id'] = title.css(
+                "span.imdbRatingPlugin::attr(data-title)").extract_first()
+            yield item
+            if not scrapped:
+                scrapped = True
+        self.page_num = self.page_num + 1
+        if scrapped:
             yield response.follow(url=self.api_url.format(self.page_num), callback=self.parse)
